@@ -18,7 +18,7 @@ describe<{
 	});
 
 	it("should accept the supported named tags", ({ validator }) => {
-		for (const tag of ["latest", "safe", "finalized"]) {
+		for (const tag of ["latest", "safe", "finalized", "pending", "earliest"]) {
 			assert.undefined(validator.validate("blockTag", tag).errors);
 		}
 	});
@@ -29,14 +29,8 @@ describe<{
 		}
 	});
 
-	it("should reject the unsupported 'pending' and 'earliest' tags", ({ validator }) => {
-		for (const tag of ["pending", "earliest"]) {
-			assert.defined(validator.validate("blockTag", tag).errors);
-		}
-	});
-
 	it("should reject malformed or non-string values", ({ validator }) => {
-		for (const value of ["LATEST", "0x", "0X1", "0xABC", "1", "", 1, null, {}]) {
+		for (const value of ["LATEST", "PENDING", "unknown", "0x", "0X1", "0xABC", "1", "", 1, null, {}]) {
 			assert.defined(validator.validate("blockTag", value).errors);
 		}
 	});

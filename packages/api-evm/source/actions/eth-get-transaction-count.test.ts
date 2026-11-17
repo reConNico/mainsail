@@ -47,6 +47,12 @@ describe<{
 				"latest",
 			]).errors,
 		);
+		assert.undefined(
+			validator.validate("jsonRpc_eth_getTransactionCount", [
+				"0x0000000000000000000000000000000000000000",
+				"pending",
+			]).errors,
+		);
 		assert.defined(validator.validate("jsonRpc_eth_getTransactionCount", [1]).errors);
 		assert.defined(validator.validate("jsonRpc_eth_getTransactionCount", {}).errors);
 	});
@@ -62,6 +68,15 @@ describe<{
 		const getAccountInfo = spy(evm, "getAccountInfo");
 
 		await action.handle(["0x0000000000", "latest"]);
+
+		getAccountInfo.calledOnce();
+		getAccountInfo.calledWith("0x0000000000", undefined);
+	});
+
+	it("should not use history for the 'pending' tag", async ({ action, evm }) => {
+		const getAccountInfo = spy(evm, "getAccountInfo");
+
+		await action.handle(["0x0000000000", "pending"]);
 
 		getAccountInfo.calledOnce();
 		getAccountInfo.calledWith("0x0000000000", undefined);

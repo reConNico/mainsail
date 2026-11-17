@@ -17,14 +17,19 @@ describe<{
 		assert.is(await resolveBlockTag(stateStore, "0xff"), 255);
 	});
 
-	it("should return the current block number for latest/finalized/safe", async ({ stateStore }) => {
+	it("should return the current block number for latest/finalized/safe/pending", async ({ stateStore }) => {
 		assert.is(await resolveBlockTag(stateStore, "latest"), 100);
 		assert.is(await resolveBlockTag(stateStore, "finalized"), 100);
 		assert.is(await resolveBlockTag(stateStore, "safe"), 100);
+		assert.is(await resolveBlockTag(stateStore, "pending"), 100);
+	});
+
+	it("should return the genesis block number for earliest", async ({ stateStore }) => {
+		assert.is(await resolveBlockTag(stateStore, "earliest"), 0);
 	});
 
 	it("should throw for an invalid tag", async ({ stateStore }) => {
-		await assert.rejects(() => resolveBlockTag(stateStore, "pending"), "invalid blockTag:pending");
+		await assert.rejects(() => resolveBlockTag(stateStore, "unknown"), "invalid blockTag:unknown");
 	});
 });
 
@@ -34,13 +39,18 @@ describe("getHistoryHeightFromBlockTag", ({ it, assert }) => {
 		assert.is(await getHistoryHeightFromBlockTag("0x0"), 0n);
 	});
 
-	it("should return undefined for latest/finalized/safe", async () => {
+	it("should return undefined for latest/finalized/safe/pending", async () => {
 		assert.undefined(await getHistoryHeightFromBlockTag("latest"));
 		assert.undefined(await getHistoryHeightFromBlockTag("finalized"));
 		assert.undefined(await getHistoryHeightFromBlockTag("safe"));
+		assert.undefined(await getHistoryHeightFromBlockTag("pending"));
+	});
+
+	it("should return the genesis height for earliest", async () => {
+		assert.is(await getHistoryHeightFromBlockTag("earliest"), 0n);
 	});
 
 	it("should throw for an invalid tag", async () => {
-		await assert.rejects(() => getHistoryHeightFromBlockTag("pending"), "invalid blockTag:pending");
+		await assert.rejects(() => getHistoryHeightFromBlockTag("unknown"), "invalid blockTag:unknown");
 	});
 });
