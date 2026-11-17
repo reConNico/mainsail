@@ -7,7 +7,7 @@ import type {
 	TransactionSerializable,
 } from "./transactions.js";
 
-export type BlockTag = "latest" | "finalized" | "safe";
+export type BlockTag = "latest" | "finalized" | "safe" | "pending" | "earliest";
 
 export interface BlockHeaderRaw {
 	readonly version: number;
